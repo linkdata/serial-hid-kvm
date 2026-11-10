@@ -233,7 +233,7 @@ class ApiDispatcher:
         if relative:
             mouse.move_relative(x, y)
         else:
-            mouse.move_absolute(x, y, params.get("button_mode"))
+            mouse.move_absolute(x, y)
         return {"position": {"x": x, "y": y, "relative": relative}}
 
     def _do_mouse_click(self, params: dict) -> dict:

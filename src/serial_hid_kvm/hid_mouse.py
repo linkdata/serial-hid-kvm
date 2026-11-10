@@ -64,17 +64,15 @@ class Mouse:
                 return
         self._dev.send(build_mouse_rel_packet(buttons, 0, 0))
 
-    def move_absolute(self, x: int, y: int, button_mode: str | None = None):
+    def move_absolute(self, x: int, y: int):
         """Move mouse to absolute screen position (preserves button state).
 
         Args:
             x: Screen X coordinate
             y: Screen Y coordinate
-            button_mode: "absolute" or "relative"; None uses the default
         """
-        buttons = 0 if self._relative(button_mode) else self._buttons
         abs_x, abs_y = self._screen_to_abs(x, y)
-        packet = build_mouse_abs_packet(buttons, abs_x, abs_y)
+        packet = build_mouse_abs_packet(self._buttons, abs_x, abs_y)
         self._dev.send(packet)
 
     def move_relative(self, dx: int, dy: int):

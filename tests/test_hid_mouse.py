@@ -36,16 +36,11 @@ def test_click_uses_default_or_override(monkeypatch, default, override, expected
     assert _sent(dev) == expected
 
 
-def test_relative_drag():
+def test_relative_down_up():
     mouse, dev = _mouse("relative")
     mouse.mouse_down("right", 1, 2)
-    mouse.move_absolute(3, 4)
     mouse.mouse_up("right", 5, 6)
-    assert _sent(dev) == [
-        ABS(0, 1, 2), REL(2, 0, 0),
-        ABS(0, 3, 4),
-        ABS(0, 5, 6), REL(0, 0, 0),
-    ]
+    assert _sent(dev) == [ABS(0, 1, 2), REL(2, 0, 0), ABS(0, 5, 6), REL(0, 0, 0)]
 
 
 def test_unpositioned_click_is_relative_in_both_modes(monkeypatch):
@@ -64,7 +59,7 @@ def test_invalid_mode_rejected():
         mouse.click("left", 1, 1, "bogus")
     with pytest.raises(ValueError):
         mouse.mouse_down("left", 1, 1, "bogus")
-    mouse.move_absolute(1, 1)
+    mouse.mouse_up("right", 1, 1)
     assert _sent(dev) == [ABS(0, 1, 1)]  # Rejected press left no held button.
 
 

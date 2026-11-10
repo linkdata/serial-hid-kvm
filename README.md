@@ -357,7 +357,7 @@ JSON Lines protocol over TCP socket. Enable with `--api`. One JSON object per li
 | `type_text` | `text`, `char_delay_ms?`, `raw?` | Type text with `{tag}` support (whitelist-based). `char_delay_ms`: delay between each keystroke in ms (default: 20) |
 | `send_key` | `key`, `modifiers?` | Single key press (e.g., `enter`, `f5`) |
 | `send_key_sequence` | `steps`, `default_delay_ms?` | Multiple key steps with delays. `default_delay_ms`: delay between steps in ms (default: 100). Each step can override with `delay_ms` |
-| `mouse_move` | `x`, `y`, `relative?`, `button_mode?` | Move mouse cursor (preserves button state during drag) |
+| `mouse_move` | `x`, `y`, `relative?` | Move mouse cursor (preserves button state during drag) |
 | `mouse_click` | `button?`, `x?`, `y?`, `button_mode?` | Click at position |
 | `mouse_down` | `button?`, `x?`, `y?`, `button_mode?` | Press and hold button (for drag start) |
 | `mouse_up` | `button?`, `x?`, `y?`, `button_mode?` | Release button (for drag end) |

@@ -141,12 +141,8 @@ class KvmClient:
             params["default_delay_ms"] = default_delay_ms
         return self.call("send_key_sequence", params)
 
-    def mouse_move(self, x: int, y: int, relative: bool = False,
-                   button_mode: str | None = None) -> dict:
-        params: dict = {"x": x, "y": y, "relative": relative}
-        if button_mode is not None:
-            params["button_mode"] = button_mode
-        return self.call("mouse_move", params)
+    def mouse_move(self, x: int, y: int, relative: bool = False) -> dict:
+        return self.call("mouse_move", {"x": x, "y": y, "relative": relative})
 
     def mouse_click(self, button: str = "left",
                     x: int | None = None, y: int | None = None,
