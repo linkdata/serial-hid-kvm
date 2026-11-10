@@ -145,7 +145,7 @@ Options:
   --log-file PATH           Also write logs to a file (in addition to stderr)
   --debug-keys              Show keycode, viewer input, and outgoing HID packet debug output
   --show-cursor             Show mouse cursor on preview window
-  --mouse-button-mode MODE  Viewer button reports: absolute (default) or relative
+  --mouse-button-mode MODE  Viewer and API button reports: absolute (default) or relative
   --preview-keyboard MODE   Preview keyboard: auto (default), opencv, or pynput
   -c, --config FILE         Path to YAML config file
 
@@ -195,7 +195,7 @@ All use the `SHKVM_` prefix:
 | `SHKVM_CAPTURE_HEIGHT` | `1080` | Capture resolution height |
 | `SHKVM_TARGET_LAYOUT` | `us104` | Target keyboard layout for API and preview |
 | `SHKVM_HOST_LAYOUT` | `auto` | Host keyboard layout (`auto`, layout name, or `none`) |
-| `SHKVM_MOUSE_BUTTON_MODE` | `absolute` | Viewer button reports (`absolute` or `relative`) |
+| `SHKVM_MOUSE_BUTTON_MODE` | `absolute` | Viewer and API button reports (`absolute` or `relative`) |
 | `SHKVM_PREVIEW_KEYBOARD` | `auto` | Preview keyboard backend (`auto`, `opencv`, or `pynput`) |
 | `SHKVM_LAYOUTS_DIR` | — | Directory for custom layout YAML files |
 | `SHKVM_API` | `false` | Enable API server (`1`/`true`) |
@@ -284,7 +284,7 @@ Use `--debug-keys` to see which path each key takes. Pynput debug output labels:
 
 `--debug-keys` also logs viewer input and outgoing HID packets. Add `--log-file ~/serial-hid-kvm.log` to record them. These logs include all keyboard input sent to the target, including input sent via the API (e.g. passwords), so review or redact them before sharing, for example in an issue.
 
-If mouse movement works but clicks do not, try `--mouse-button-mode relative` in either viewer. Pointer movement remains absolute.
+If mouse movement works but clicks do not, try `--mouse-button-mode relative`. It applies to both viewers and is the default for API mouse methods. Pointer movement remains absolute.
 
 **Known limitation — layout-specific physical keys (e.g. JIS ろ/¥)**: Some keyboards have physical keys that don't exist on other layouts. For example, JIS keyboards have ろ (International1, HID 0x87) and ¥ (International3, HID 0x89), which produce `\`/`_` and `¥`/`|` respectively. On Xwayland with a US keymap, these keys are mapped to the same characters as standard US keys (`_` = Shift+`-`, `|` = Shift+`\`), making them indistinguishable at the character level. The preview window sends the standard key position in these cases. **The web viewer handles all keys correctly** because it uses `event.code` (W3C physical key positions) which is layout-independent.
 
@@ -358,9 +358,9 @@ JSON Lines protocol over TCP socket. Enable with `--api`. One JSON object per li
 | `send_key` | `key`, `modifiers?` | Single key press (e.g., `enter`, `f5`) |
 | `send_key_sequence` | `steps`, `default_delay_ms?` | Multiple key steps with delays. `default_delay_ms`: delay between steps in ms (default: 100). Each step can override with `delay_ms` |
 | `mouse_move` | `x`, `y`, `relative?` | Move mouse cursor (preserves button state during drag) |
-| `mouse_click` | `button?`, `x?`, `y?` | Click at position |
-| `mouse_down` | `button?`, `x?`, `y?` | Press and hold button (for drag start) |
-| `mouse_up` | `button?`, `x?`, `y?` | Release button (for drag end) |
+| `mouse_click` | `button?`, `x?`, `y?`, `button_mode?` | Click at position |
+| `mouse_down` | `button?`, `x?`, `y?`, `button_mode?` | Press and hold button (for drag start) |
+| `mouse_up` | `button?`, `x?`, `y?`, `button_mode?` | Release button (for drag end) |
 | `mouse_scroll` | `amount` | Scroll wheel (-127 to 127) |
 | `capture_frame` | `quality?` | Capture screen as base64 JPEG |
 | `get_device_info` | — | Serial port, capture device, config info |
@@ -368,6 +368,8 @@ JSON Lines protocol over TCP socket. Enable with `--api`. One JSON object per li
 | `set_capture_device` | `device` | Switch capture device |
 | `set_capture_resolution` | `width`, `height` | Change capture resolution |
 | `ping` | — | Health check |
+
+`button_mode` is `absolute` or `relative` and defaults to `--mouse-button-mode`. In `relative` mode, positioned clicks send a button-free absolute move followed by relative button reports.
 
 ### Text Tags
 

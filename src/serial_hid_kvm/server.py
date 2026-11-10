@@ -84,6 +84,7 @@ class KvmHardware:
                 self.get_ch9329(),
                 self._config.screen_width,
                 self._config.screen_height,
+                self._config.mouse_button_mode,
             )
         return self._mouse
 
@@ -239,21 +240,21 @@ class ApiDispatcher:
         button = params.get("button", "left")
         x = params.get("x")
         y = params.get("y")
-        self._hw.get_mouse().click(button, x, y)
+        self._hw.get_mouse().click(button, x, y, params.get("button_mode"))
         return {"clicked": True}
 
     def _do_mouse_down(self, params: dict) -> dict:
         button = params.get("button", "left")
         x = params.get("x")
         y = params.get("y")
-        self._hw.get_mouse().mouse_down(button, x, y)
+        self._hw.get_mouse().mouse_down(button, x, y, params.get("button_mode"))
         return {"pressed": True, "button": button}
 
     def _do_mouse_up(self, params: dict) -> dict:
         button = params.get("button", "left")
         x = params.get("x")
         y = params.get("y")
-        self._hw.get_mouse().mouse_up(button, x, y)
+        self._hw.get_mouse().mouse_up(button, x, y, params.get("button_mode"))
         return {"released": True, "button": button}
 
     def _do_mouse_scroll(self, params: dict) -> dict:
@@ -423,7 +424,7 @@ def _build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--show-cursor", action="store_true",
                         help="Show crosshair cursor on preview window")
     parser.add_argument("--mouse-button-mode", choices=("absolute", "relative"),
-                        help="Viewer button reports (default: absolute); use relative "
+                        help="Viewer and API button reports (default: absolute); use relative "
                              "for targets that ignore buttons in absolute reports")
     parser.add_argument("--preview-keyboard", choices=("auto", "opencv", "pynput"),
                         help="Preview keyboard backend (default: auto); auto preserves "
