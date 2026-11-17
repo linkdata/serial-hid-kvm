@@ -2,6 +2,8 @@
 
 Standalone KVM (Keyboard, Video, Mouse) controller using a CH9329 USB HID emulator over serial and a USB HDMI capture device. Provides an interactive preview window with full keyboard/mouse pass-through, a web-based remote viewer, and a JSON Lines API for programmatic automation.
 
+The Go port is being developed in [autopaws](https://github.com/linkdata/autopaws), with the `autopaws-kvm` daemon. That repository is currently private and unreleased.
+
 ## What It Does
 
 Turn two cheap USB devices (~$15 total) into a software KVM switch. Control any PC's keyboard and mouse over USB while watching its screen via HDMI capture — all from another PC, a script, or an AI agent.
